@@ -178,63 +178,33 @@ userController.update = async (req, res) =>
 userController.listBusiness = async (req, res) =>
 {
     try {
-        // grab business by name
-        const business = await models.business.findOne({ where: { name: req.body.business}});
-        // check if business exists
-        if (business)
+        // create business
+        const business = await models.business.create(
         {
-            // grab users listed businesses
-            const listedBusinesses = await req.user.getBusinesses();
-            // check if listed businesses is empty
-            if (listedBusinesses.length === 0)
-            {
-                // list business to user
-                req.user.addBusiness(business);
-                // return message
-                res.json({ message: 'business list successfull', business });
-            }
-            // not empty
-            else
-            {
-                // check if business is already listed under user
-                for (let i = 0; i < listedBusinesses.length; i++)
-                {
-                    // business already listed
-                    if (listedBusinesses[i].id === business.id)
-                    {
-                        res.json({ message: 'business already listed' });
-                        return;
-                    }
-                    // business not listed
-                    if (i === listedBusinesses.length - 1)
-                    {
-                        // list business to user
-                        req.user.addBusiness(business);
-                        // return message
-                        res.json({ message: 'business list successfull', business });
-                    }
-                }
-            }
-        }
-        // no business found
-        else
-        {
-            res.status(404).json({ error: 'could not find business' });
-        }
+            name: req.body.name,
+            address: req.body.address,
+            type: req.body.type,
+            description: req.body.description
+        })
+        // add business to user
+        req.user.addBusiness(business);
+        // return business
+        res.json({ message: 'business listed successfully', business });
     } catch (error) {
         res.status(400).json({ error: 'could not list business' });
     }
 }
 
 // get listed businesses
-userController.getListedBusiness = async (req, res) =>
+userController.getListedBusinesses = async (req, res) =>
 {
     try {
-        // grab businesses by name
+        // grab users businesses
         const businesses = await req.user.getBusinesses();
         // check if businesses exist
         if (businesses)
         {
+            // return businesses
             res.json({ businesses });
         }
         // no businesses found
@@ -247,17 +217,65 @@ userController.getListedBusiness = async (req, res) =>
     }
 }
 
+// get specific listed business
+userController.getListedBusiness = async (req, res) =>
+{
+    try {
+        // grab business by id
+        const business = await models.business.findOne({ where: { id: req.params.id}});
+        // check if business exists
+        if (business)
+        {
+            // return business
+            res.json({ business });
+        }
+        // no business found
+        else
+        {
+            res.status(404).json({ error: 'could not find business' });
+        }
+    } catch (error) {
+        res.status(400).json({ error: 'could not get listed business' });
+    }
+}
+
+// edit business
+userController.editBusiness = async (req, res) =>
+{
+    try {
+        // grab business by id
+        const business = await models.business.findOne({ where: { id: req.params.id}});
+        // check if business exists
+        if (business)
+        {
+            // update business
+            business.update(req.body);
+            // return business
+            res.json({ message: 'business updated successfully', business });
+        }
+        // no business found
+        else
+        {
+            res.status(404).json({ error: 'could not find business' });
+        }
+    } catch (error) {
+        res.status(400).json({ error: 'could not edit business' });
+    }
+}
+
 // delete listed business
 userController.deleteListedBusiness = async (req, res) =>
 {
     try {
-        // grab business by name
-        const business = await models.business.findOne({ where: { name: req.body.business}})
-        // check if business exist
+        // grab business by id
+        const business = await models.business.findOne({ where: { name: req.params.id}})
+        // check if business exists
         if (business)
         {
-            // remove business from listed list
+            // remove business from user
             req.user.removeBusiness(business);
+            // remove business from db
+            business.destroy();
 
             res.json({ message: 'business deleted successfully'});
         }
@@ -271,7 +289,7 @@ userController.deleteListedBusiness = async (req, res) =>
     }
 }
 
-// post user review
+// post business review
 userController.postReview = async (req, res) =>
 {
     try {
@@ -282,13 +300,13 @@ userController.postReview = async (req, res) =>
             content: req.body.content,
             rating: req.body.rating
         })
-        // add review to user
-        req.user.addReview(review);
         // grab business
-        const business = await models.business.findOne({ where: { id: req.body.businessId}});
+        const business = await models.business.findOne({ where: { id: req.params.id}});
         // check if business exists
         if (business)
         {
+            // add review to user
+            req.user.addReview(review);
             // add review to business
             business.addReview(review);
         }
@@ -305,14 +323,38 @@ userController.postReview = async (req, res) =>
     }
 }
 
+// edit review
+userController.editReview = async (req, res) =>
+{
+    try {
+        // grab review by id
+        const review = await models.review.findOne({ where: { id: req.params.id}});
+        // check if review exists
+        if (review)
+        {
+            // update review
+            review.update(req.body);
+            // return review
+            res.json({ message: 'review updated successfully', review });
+        }
+        // no review found
+        else
+        {
+            res.status(404).json({ error: 'could not find review' });
+        }
+    } catch (error) {
+        res.status(400).json({ error: 'could not edit review' });
+    }
+}
+
 // delete review
 userController.deleteReview = async (req, res) =>
 {
     try {
         // grab review by id
-        const review = await models.review.findOne({ where: { id: req.body.reviewId}});
+        const review = await models.review.findOne({ where: { id: req.params.reviewId}});
         // grab business by id
-        const business = await models.review.findOne({ where: { id: req.body.businessId}});
+        const business = await models.review.findOne({ where: { id: req.params.businessId}});
         // check if review and business exist
         if (review && business)
         {
