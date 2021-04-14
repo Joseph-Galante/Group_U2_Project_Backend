@@ -11,8 +11,10 @@ userRoutes.post('/', userController.create);
 userRoutes.post('/login', userController.login);
 userRoutes.get('/profile', userController.profile);
 userRoutes.put('/profile', userController.update);
-userRoutes.post('/recipes', userController.saveRecipe);
-userRoutes.get('/recipes', userController.getSavedRecipes);
-userRoutes.delete('/recipes', userController.deleteSavedRecipe);
+userRoutes.post('/businesses', userController.listBusiness);
+userRoutes.get('/businesses', userController.getListedBusiness);
+userRoutes.delete('/businesses', userController.deleteListedBusiness);
+userRoutes.post('/reviews', userController.postReview);
+userRoutes.delete('/reviews', userController.deleteReview);
 
 module.exports = userRoutes;

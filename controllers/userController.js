@@ -284,8 +284,20 @@ userController.postReview = async (req, res) =>
         })
         // add review to user
         req.user.addReview(review);
-        // add review to business
-        
+        // grab business
+        const business = await models.business.findOne({ where: { id: req.body.businessId}});
+        // check if business exists
+        if (business)
+        {
+            // add review to business
+            business.addReview(review);
+        }
+        // no business
+        else
+        {
+            res.status(404).json({ error: 'no business found'});
+        }
+
         // return review
         res.json({ message: 'review posted successfully', review });
     } catch (error) {
@@ -297,13 +309,17 @@ userController.postReview = async (req, res) =>
 userController.deleteReview = async (req, res) =>
 {
     try {
-        // grab review by name
-        const review = await models.review.findOne({ where: { id: req.body.id}})
-        // check if review exist
-        if (review)
+        // grab review by id
+        const review = await models.review.findOne({ where: { id: req.body.reviewId}});
+        // grab business by id
+        const business = await models.review.findOne({ where: { id: req.body.businessId}});
+        // check if review and business exist
+        if (review && business)
         {
             // remove review from user
             req.user.removeReview(review);
+            // remove review from business
+            business.removeReview(review);
             // remove review from db
             review.destroy();
 
