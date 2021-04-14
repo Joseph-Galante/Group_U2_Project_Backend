@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -27,5 +28,6 @@
     "rowdy-logger": "^1.0.2",
     "sequelize": "^6.6.2",
     "sequelize-cli": "^6.2.0"
-  }
+  },
+  "keywords": []
 }
