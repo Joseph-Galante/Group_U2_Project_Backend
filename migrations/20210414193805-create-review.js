@@ -17,8 +17,8 @@ module.exports = {
       rating: {
         type: Sequelize.INTEGER
       },
-      userId: {
-        type: Sequelize.INTEGER
+      owner: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

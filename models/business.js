@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     type: DataTypes.STRING,
     description: DataTypes.STRING,
     image: DataTypes.STRING,
-    userId: DataTypes.INTEGER
+    owner: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'business',
