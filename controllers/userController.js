@@ -110,7 +110,7 @@ userController.login = async (req, res) =>
             // encrypt id
             const encryptedId = jwt.sign({ userId: user.id}, process.env.JWT_SECRET);
             // return encrypted user id
-            res.json({ message: 'login successfull', userId: encryptedId })
+            res.json({ message: 'login successfull', name: user.name, userId: encryptedId })
         }
         // wrong password
         else
