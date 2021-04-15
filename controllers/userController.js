@@ -184,7 +184,8 @@ userController.listBusiness = async (req, res) =>
             name: req.body.name,
             address: req.body.address,
             type: req.body.type,
-            description: req.body.description
+            description: req.body.description,
+            owner: req.user.name
         })
         // add business to user
         req.user.addBusiness(business);
@@ -298,7 +299,8 @@ userController.postReview = async (req, res) =>
         {
             headline: req.body.headline,
             content: req.body.content,
-            rating: req.body.rating
+            rating: req.body.rating,
+            owner: req.user.name
         })
         // grab business
         const business = await models.business.findOne({ where: { id: req.params.id}});
@@ -309,6 +311,8 @@ userController.postReview = async (req, res) =>
             req.user.addReview(review);
             // add review to business
             business.addReview(review);
+            // return review
+            res.json({ message: 'review posted successfully', review });
         }
         // no business
         else
@@ -316,8 +320,6 @@ userController.postReview = async (req, res) =>
             res.status(404).json({ error: 'no business found'});
         }
 
-        // return review
-        res.json({ message: 'review posted successfully', review });
     } catch (error) {
         res.status(400).json({ error: 'could not post review' });
     }

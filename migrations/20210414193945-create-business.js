@@ -23,8 +23,8 @@ module.exports = {
       image: {
         type: Sequelize.STRING
       },
-      userId: {
-        type: Sequelize.INTEGER
+      owner: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
