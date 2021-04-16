@@ -66,6 +66,28 @@ userController.getAll = async (req, res) =>
     }
 }
 
+// get single user
+userController.getOne = async (req, res) =>
+{
+    try {
+        // grab user
+        const user = await models.user.findOne({ where: { id: req.user.id}});
+        // check if user exists
+        if (user)
+        {
+            // return user
+            res.json({ message: 'user found', user });
+        }
+        // no user
+        else
+        {
+            res.status(404).json({ error: 'no user found'})
+        }
+    } catch (error) {
+        res.status(400).json({ error: 'could not get user' });
+    }
+}
+
 // signup
 userController.create = async (req, res) =>
 {
@@ -269,10 +291,18 @@ userController.deleteListedBusiness = async (req, res) =>
 {
     try {
         // grab business by id
-        const business = await models.business.findOne({ where: { name: req.params.id}});
+        const business = await models.business.findOne({ where: { id: req.params.id}});
         // check if business exists
         if (business)
         {
+            // grab business reviews
+            const reviews = await business.getReviews();
+            console.log(reviews)
+            // remove all reviews from db
+            reviews.forEach(review => {
+                business.removeReview(review);
+                review.destroy();
+            });
             // remove business from user
             req.user.removeBusiness(business);
             // remove business from db
@@ -322,60 +352,6 @@ userController.postReview = async (req, res) =>
 
     } catch (error) {
         res.status(400).json({ error: 'could not post review' });
-    }
-}
-
-// edit review
-userController.editReview = async (req, res) =>
-{
-    try {
-        // grab review by id
-        const review = await models.review.findOne({ where: { id: req.params.id}});
-        // check if review exists
-        if (review)
-        {
-            // update review
-            review.update(req.body);
-            // return review
-            res.json({ message: 'review updated successfully', review });
-        }
-        // no review found
-        else
-        {
-            res.status(404).json({ error: 'could not find review' });
-        }
-    } catch (error) {
-        res.status(400).json({ error: 'could not edit review' });
-    }
-}
-
-// delete review
-userController.deleteReview = async (req, res) =>
-{
-    try {
-        // grab review by id
-        const review = await models.review.findOne({ where: { id: req.params.reviewId}});
-        // grab business by id
-        const business = await models.review.findOne({ where: { id: req.params.businessId}});
-        // check if review and business exist
-        if (review && business)
-        {
-            // remove review from user
-            req.user.removeReview(review);
-            // remove review from business
-            business.removeReview(review);
-            // remove review from db
-            review.destroy();
-
-            res.json({ message: 'review deleted successfully'});
-        }
-        // no review found
-        else
-        {
-            res.status(404).json({ error: 'could not find review' });
-        }
-    } catch (error) {
-        res.status(400).json({ error: 'could not delete review' });
     }
 }
 

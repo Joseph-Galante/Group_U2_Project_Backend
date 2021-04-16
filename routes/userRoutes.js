@@ -8,6 +8,7 @@ const userRoutes = express.Router();
 // routes
 // user info
 userRoutes.get('/', userController.getAll);
+userRoutes.get('/verify', userController.getOne);
 userRoutes.post('/', userController.create);
 userRoutes.post('/login', userController.login);
 userRoutes.get('/profile', userController.profile);
@@ -20,7 +21,5 @@ userRoutes.put('/businesses/:id', userController.editBusiness);
 userRoutes.delete('/businesses/:id', userController.deleteListedBusiness);
 // user's reviews
 userRoutes.post('/businesses/:id/reviews', userController.postReview);
-userRoutes.put('/reviews/:id', userController.editReview);
-userRoutes.delete('/businesses/:businessId/reviews/:reviewId', userController.deleteReview);
 
 module.exports = userRoutes;
