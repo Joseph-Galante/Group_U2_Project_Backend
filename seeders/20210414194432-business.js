@@ -13,11 +13,12 @@ module.exports = {
     */
    await queryInterface.bulkInsert('businesses', [
      {
-       name: `Sister Margaret''s School for Wayward Children`,
+       name: `Sister Margaret's School for Wayward Children`,
        address: 'New York City, NY',
        type: 'Bar',
        description: 'Mercenary hangout/dispatch center',
        owner: 'Patch',
+       userId: '1',
        createdAt: new Date(),
        updatedAt: new Date()
      }
