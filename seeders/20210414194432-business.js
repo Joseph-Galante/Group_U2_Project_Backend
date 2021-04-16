@@ -11,6 +11,17 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
+   await queryInterface.bulkInsert('businesses', [
+     {
+       name: `Sister Margaret''s School for Wayward Children`,
+       address: 'New York City, NY',
+       type: 'Bar',
+       description: 'Mercenary hangout/dispatch center',
+       owner: 'Patch',
+       createdAt: new Date(),
+       updatedAt: new Date()
+     }
+    ], {})
   },
 
   down: async (queryInterface, Sequelize) => {
