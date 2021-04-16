@@ -25,7 +25,8 @@ module.exports = (sequelize, DataTypes) => {
         max: 5
       }
     },
-    owner: DataTypes.STRING
+    owner: DataTypes.STRING,
+    userId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'review',
