@@ -269,7 +269,7 @@ userController.deleteListedBusiness = async (req, res) =>
 {
     try {
         // grab business by id
-        const business = await models.business.findOne({ where: { name: req.params.id}})
+        const business = await models.business.findOne({ where: { name: req.params.id}});
         // check if business exists
         if (business)
         {

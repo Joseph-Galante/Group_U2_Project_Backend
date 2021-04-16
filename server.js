@@ -30,7 +30,7 @@ app.use(morgan('tiny'));
 
 //=============== ROUTES ===============//
 
-//authoirze user before every request
+//authorize user before every request
 app.use(userController.authorizeUser);
 app.use('/users', userRoutes);
 
